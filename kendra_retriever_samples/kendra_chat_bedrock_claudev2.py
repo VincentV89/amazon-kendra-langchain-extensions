@@ -24,12 +24,14 @@ def build_chain():
   region = os.environ["AWS_REGION"]
   kendra_index_id = os.environ["KENDRA_INDEX_ID"]
   credentials_profile_name = os.environ['AWS_PROFILE']
+  bedrock_role = "arn:aws:iam::017490449790:role/WorkshopBedrockCrossAccountAccess"
 
   print(credentials_profile_name)
 
 
   llm = Bedrock(
-      credentials_profile_name=credentials_profile_name,
+      # credentials_profile_name=credentials_profile_name, #OPTION 1, USING BEDROCK FROM THIS ACCOUNT
+      assumed_role = bedrock_role, #OPTION 2: USING BEDROCK FROM ANOTHER ACCOUNT
       region_name = region,
       model_kwargs={"max_tokens_to_sample":300,"temperature":1,"top_k":250,"top_p":0.999,"anthropic_version":"bedrock-2023-05-31"},
       model_id="anthropic.claude-v2"
